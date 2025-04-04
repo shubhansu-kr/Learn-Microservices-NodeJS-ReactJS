@@ -4,16 +4,23 @@ import axios from "axios";
 const CreateComment = ({ postId, onCommentCreated }) => {
     const [content, setContent] = useState("");
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const res = await axios.post(`http://localhost:4001/posts/${postId}/comments`, { content });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await axios.post(`http://localhost:4001/posts/${postId}/comments`, {
+            content,
+        });
 
-        onCommentCreated(res.data); // Send new comment to parent
-        setContent(""); // Clear input field
+        if (onCommentCreated) {
+            const comments = res.data;
+            const latestComment = comments[comments.length - 1]; // ✅ Safely get latest
+            onCommentCreated(postId, latestComment);
+        }
+
+        setContent("");
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mt-2">
             <div className="mb-2">
                 <input
                     type="text"
@@ -21,10 +28,9 @@ const CreateComment = ({ postId, onCommentCreated }) => {
                     placeholder="Add a comment"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    required
                 />
             </div>
-            <button type="submit" className="btn btn-primary btn-sm">Submit</button>
+            <button className="btn btn-primary btn-sm">Submit</button>
         </form>
     );
 };
