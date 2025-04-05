@@ -210,6 +210,48 @@ Now we need to update the code for our services to reach out to k8s url instead 
 
 Replace localhost with Cluster Ip sercive name.
 
-### Create cluster ip service for each service
+## Create cluster ip service for each service
 
 We need to create clusterip service and a deployment for each service so that they can communicate over the event bus.
+
+## Load balancer service
+
+To incorporate the react client we would need a load balancer service which will catch the incoming request from the browser and distribute it to the relevant service's clusterIP to fetch the correct result.
+
+It tells the kubernetes to reach out to its provider and provision a load balancer. Get traffic in a single pod.
+
+## Ingress or Ingress Controller
+
+A pod with a set of routing rules to distribute the traffic to other services.
+
+Install ingress-nginx :
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+```
+
+Create the routing rule for nginx ingress.
+
+```yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: posts.com
+      http: 
+        paths:
+          - path: /posts
+            pathType: Prefix
+            backend:
+              service:
+                name: posts-clusterip-srv
+                port:
+                  number: 4000
+```
+
+## React App Modification
+

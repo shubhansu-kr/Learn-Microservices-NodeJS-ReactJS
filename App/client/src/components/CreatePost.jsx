@@ -6,10 +6,10 @@ const CreatePost = ({ onPostCreated }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const res = await axios.post("http://localhost:4000/posts", { title });
+        const res = await axios.post("http://posts.com/posts/create", { title });
 
-        onPostCreated(res.data); // Pass new post to update state in PostList
-        setTitle(""); // Clear input after submission
+        onPostCreated(res.data);
+        setTitle("");
     };
 
     return (

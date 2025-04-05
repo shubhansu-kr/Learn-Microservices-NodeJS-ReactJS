@@ -6,13 +6,13 @@ const CreateComment = ({ postId, onCommentCreated }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await axios.post(`http://localhost:4001/posts/${postId}/comments`, {
+        const res = await axios.post(`http://posts.com/posts/${postId}/comments`, {
             content,
         });
 
         if (onCommentCreated) {
             const comments = res.data;
-            const latestComment = comments[comments.length - 1]; // ✅ Safely get latest
+            const latestComment = comments[comments.length - 1];
             onCommentCreated(postId, latestComment);
         }
 

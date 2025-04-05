@@ -8,7 +8,7 @@ const PostList = () => {
 
     useEffect(() => {
         const fetchPosts = async () => {
-            const res = await axios.get("http://localhost:4002/posts"); // ✅ Using query service
+            const res = await axios.get("http://posts.com/posts");
             setPosts(res.data);
         };
 
@@ -18,7 +18,7 @@ const PostList = () => {
     const addNewPost = (newPost) => {
         setPosts((prevPosts) => ({
             ...prevPosts,
-            [newPost.id]: { ...newPost, comments: [] }, // ✅ Add empty comments array
+            [newPost.id]: { ...newPost, comments: [] },
         }));
     };
 

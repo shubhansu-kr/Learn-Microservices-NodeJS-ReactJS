@@ -2,7 +2,7 @@ const CommentList = ({ comments }) => {
     return (
         <ul className="list-group list-group-flush">
             {comments
-                .filter(comment => comment.status !== "rejected") // Exclude rejected comments
+                .filter(comment => comment.status !== "rejected")
                 .map((comment) => (
                     <li className="list-group-item" key={comment.id}>
                         {comment.status === "pending"
