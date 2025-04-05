@@ -255,3 +255,92 @@ spec:
 
 ## React App Modification
 
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['posts.com']
+  }
+})
+```
+
+Had to update vite to allow posts.com to make call to react application.
+
+Also update the axios urls to pods urls instead of local host and update the route path for creating and fetching pods.
+
+## Skaffold
+
+Automates tasks in kubernetes development environment.
+Makes it easy to update code in running pod.
+Makes it really easy to create/delete all the object tied to a project at once.
+
+[Skaffold.dev](https://skaffold.dev/docs/install/)
+
+```yaml
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy: 
+  kubectl: 
+    manifest: 
+      - ./infra/k8s/*
+build: 
+  local: 
+    push: false
+  artifact:
+    - image: shubhansukr/client
+      context: client
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: shubhansukr/comments
+      context: comments
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: shubhansukr/event-bus
+      context: event-bus
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: shubhansukr/moderation
+      context: moderation
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: shubhansukr/posts
+      context: posts
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: shubhansukr/query
+      context: query
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: '*.js'
+            dest: .
+```
+
+To run skallfold : `skaffold dev`
+Clean docker images : `docker rmi $(docker images "shubhansukr/*" -q)`
