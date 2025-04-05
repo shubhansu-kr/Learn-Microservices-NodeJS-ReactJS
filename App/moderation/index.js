@@ -13,7 +13,7 @@ app.post('/events', (req, res) => {
         console.log('comment created event recieved in moderation service');
         const status = data.content.includes('orange') ? 'rejected' : 'approved';
 
-        axios.post('http://localhost:4005/events', {
+        axios.post('http://event-bus-srv:4005/events', {
             type: 'commentModerated',
             data: {
                 id: data.id,
